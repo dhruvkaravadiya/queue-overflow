@@ -1,11 +1,30 @@
 import type { Metadata } from "next";
 import "./globals.css";
 import React from "react";
-import { ClerkProvider } from '@clerk/nextjs';
+import { ClerkProvider } from "@clerk/nextjs";
+// eslint-disable-next-line camelcase
+import { Inter, Space_Grotesk } from "next/font/google";
+import { ThemeProvider } from "./context/ThemeProvider";
+
 export const metadata: Metadata = {
   title: "Queue Overflow",
   description: "Thriving Community of Geeks",
+  icons: {
+    icon: "/assets/icons/site-logo.svg",
+  },
 };
+
+const inter = Inter({
+  subsets: ["latin"],
+  weight: ["100", "200", "300", "400", "500", "600", "700", "800", "900"],
+  variable: "--font-inter",
+});
+
+const spaceGrotesk = Space_Grotesk({
+  subsets: ["latin"],
+  weight: ["300", "400", "500", "600", "700"],
+  variable: "--font-spaceGrotesk",
+});
 
 export default function RootLayout({
   children,
@@ -13,10 +32,23 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <ClerkProvider>
+
     <html lang="en">
-      <body>{children}</body>
+      <body className={`${inter.variable} ${spaceGrotesk.variable}`}>
+        <ClerkProvider
+          appearance={{
+            elements: {
+              formButtonPrimary: "primary-gradient",
+              footerActionLink:
+                "primary-text-gradiant hover:text:primary-500",
+            },
+          }}
+        >
+          <ThemeProvider>
+          {children}
+          </ThemeProvider>
+        </ClerkProvider>
+      </body>
     </html>
-  </ClerkProvider>
   );
 }
