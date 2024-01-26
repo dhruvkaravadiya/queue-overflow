@@ -2,6 +2,8 @@ import { SignedIn, UserButton } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import Theme from "./Theme";
+import MobileNavbar from "./MobileNavbar";
+import GlobalSearch from "../search/GlobalSearch";
 
 const Navbar = () => {
     return (
@@ -22,21 +24,23 @@ const Navbar = () => {
                         Queue<span className="text-primary-500">Overflow</span>
                     </p>
                 </Link>
-                Global Search
+                <GlobalSearch />
                 <div className="flex-between gap-5">
-                  <Theme />
-                  <SignedIn>
-                        <UserButton afterSignOutUrl="/" 
-                        appearance={{
-                              elements:{
-                                    avatarBox: 'h-10 w-10'
-                              },
-                              variables:{
-                                    colorPrimary: '#FF7000'
-                              }
-                        }}/>
-                  </SignedIn>
-                  Mobile Navbar
+                    <Theme />
+                    <SignedIn>
+                        <UserButton
+                            afterSignOutUrl="/"
+                            appearance={{
+                                elements: {
+                                    avatarBox: "h-10 w-10",
+                                },
+                                variables: {
+                                    colorPrimary: "#FF7000",
+                                },
+                            }}
+                        />
+                    </SignedIn>
+                    <MobileNavbar />
                 </div>
             </nav>
         </>
