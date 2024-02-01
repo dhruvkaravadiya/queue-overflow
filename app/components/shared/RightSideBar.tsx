@@ -1,34 +1,35 @@
 import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
+import Image from "next/image";
 const topQuestions = [
     {
-        _id: 1,
+        _id: "1",
         title: "How to install docker on linux using the command line?",
     },
     {
-        _id: 2,
+        _id: "2",
         title: "How to install docker on linux using the command line?",
     },
     {
-        _id: 3,
+        _id: "3",
         title: "How to install docker on linux using the command line?",
     },
     {
-        _id: 4,
+        _id: "4",
         title: "How to install docker on linux using the command line?",
     },
     {
-        _id: 5,
+        _id: "5",
         title: "How to install docker on linux using the command line?",
     },
 ];
 const popularTags = [
-    { _id: 1, name: "docker", totalQuestions: 5 },
-    { _id: 2, name: "reactjs", totalQuestions: 3 },
-    { _id: 3, name: "nodejs", totalQuestions: 15 },
-    { _id: 4, name: "expressjs", totalQuestions: 2 },
-    { _id: 5, name: "nextjs", totalQuestions: 8 },
+    { _id: "1", name: "docker", totalQuestions: 5 },
+    { _id: "2", name: "reactjs", totalQuestions: 3 },
+    { _id: "3", name: "nodejs", totalQuestions: 15 },
+    { _id: "4", name: "expressjs", totalQuestions: 2 },
+    { _id: "5", name: "nextjs", totalQuestions: 8 },
 ];
 const RightSideBar = () => {
     return (
@@ -51,6 +52,13 @@ const RightSideBar = () => {
                             <p className="body-medium text-dark500_light700">
                                 {question.title}
                             </p>
+                            <Image
+                                src="/assets/icons/chevron-right.svg"
+                                alt="chevron-right"
+                                height={20}
+                                width={20}
+                                className="invert-colors"
+                            />
                         </Link>
                     ))}
                 </div>
