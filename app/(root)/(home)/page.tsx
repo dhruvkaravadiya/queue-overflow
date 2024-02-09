@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import LocalSearchBar from "@/app/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -8,10 +7,10 @@ import HomeFilters from "@/app/components/home/HomeFilters";
 import NoResult from "@/app/components/shared/NoResult";
 import QuestionCard from "@/app/components/cards/QuestionCard";
 import { getAllQuestions } from "@/database/actions/question.action";
-import { GetQuestionsParams } from "@/database/actions/shared.types";
+import { Key } from "react";
 
 export default async function Home() {
-    const result = await getAllQuestions({});
+    const result: any = await getAllQuestions({});
 
     return (
         <>
@@ -45,19 +44,30 @@ export default async function Home() {
             </div>
             <div className="mt-10 flex w-full flex-col gap-6">
                 {result.questions.length > 0 ? (
-                    result.questions.map((question) => (
-                        <QuestionCard
-                            key={question._id}
-                            _id={question._id}
-                            title={question.title}
-                            tags={question.tags}
-                            author={question.author}
-                            upvotes={question.upvotes}
-                            views={question.views}
-                            answers={question.answers}
-                            createdAt={question.createdAt}
-                        />
-                    ))
+                    result.questions.map(
+                        (question: {
+                            _id: Key | null | undefined;
+                            title: string;
+                            tags: { _id: string; name: string }[];
+                            author: { _id: string; name: string };
+                            upvotes: number;
+                            views: number;
+                            answers: object[];
+                            createdAt: Date;
+                        }) => (
+                            <QuestionCard
+                                key={question._id}
+                                _id={question._id as string}
+                                title={question.title}
+                                tags={question.tags}
+                                author={question.author}
+                                upvotes={question.upvotes}
+                                views={question.views}
+                                answers={question.answers}
+                                createdAt={question.createdAt}
+                            />
+                        )
+                    )
                 ) : (
                     <NoResult
                         title="There's no Question to show!"
