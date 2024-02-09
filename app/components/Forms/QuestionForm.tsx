@@ -19,11 +19,21 @@ import { NEXT_PUBLIC_TINY_MCE_EDITOR_API_KEY } from "../../../config";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
+import { createQuestion } from "@/database/actions/question.action";
+import { useRouter, usePathname } from "next/navigation";
+
 const type: any = "create";
-const QuestionForm = () => {
+interface Props {
+    mongoUserId: string;
+}
+const QuestionForm = ({ mongoUserId }: Props) => {
     // auto key stroke in editor
     const editorRef = useRef(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
+
+    const router = useRouter();
+    const pathname = usePathname();
+
     const form = useForm<z.infer<typeof QuestionValidationsSchema>>({
         resolver: zodResolver(QuestionValidationsSchema),
         defaultValues: {
@@ -34,13 +44,23 @@ const QuestionForm = () => {
     });
 
     // 2. Define a submit handler.
-    function onSubmit(values: z.infer<typeof QuestionValidationsSchema>) {
+    async function onSubmit(values: z.infer<typeof QuestionValidationsSchema>) {
         setIsSubmitting(true);
         try {
             // make async call to api => Create Question
             // call contain form data
             // navigate to home page
+            console.log("Value : ", values);
+            await createQuestion({
+                title: values.title,
+                content: values.explanation,
+                tags: values.tags,
+                author: JSON.parse(mongoUserId),
+                path: pathname,
+            });
+            router.push("/");
         } catch (error) {
+            console.log("Error : ", error);
         } finally {
             setIsSubmitting(false);
         }

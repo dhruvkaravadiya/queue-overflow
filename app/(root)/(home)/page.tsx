@@ -1,3 +1,4 @@
+import { useState, useEffect } from "react";
 import LocalSearchBar from "@/app/components/shared/search/LocalSearch";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
@@ -6,81 +7,15 @@ import { HomePageFilters } from "@/constants/filters";
 import HomeFilters from "@/app/components/home/HomeFilters";
 import NoResult from "@/app/components/shared/NoResult";
 import QuestionCard from "@/app/components/cards/QuestionCard";
+import { getAllQuestions } from "@/database/actions/question.action";
+import { GetQuestionsParams } from "@/database/actions/shared.types";
 
-const questions = [
-    {
-        _id: "1",
-        title: "Demo question number 1 in Queue Overflow",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe" },
-        upvotes: 10,
-        views: 120,
-        answers: [],
-        createdAt: new Date("2024-02-01T13:58:09.292Z"),
-    },
-    {
-        _id: "2",
-        title: "Demo question number 2 in Queue Overflow",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe" },
-        upvotes: 10,
-        views: 120,
-        answers: [],
-        createdAt: new Date("2024-02-01T13:58:09.292Z"),
-    },
-    {
-        _id: "3",
-        title: "Demo question number 3 in Queue Overflow",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe" },
-        upvotes: 10,
-        views: 12000000,
-        answers: [],
-        createdAt: new Date("2024-02-01T13:58:09.292Z"),
-    },
-    {
-        _id: "4",
-        title: "Demo question number 4 in Queue Overflow",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe" },
-        upvotes: 10,
-        views: 120,
-        answers: [],
-        createdAt: new Date("2024-02-01T13:58:09.292Z"),
-    },
-    {
-        _id: "5",
-        title: "Demo question number 5 in Queue Overflow",
-        tags: [
-            { _id: "1", name: "python" },
-            { _id: "2", name: "sql" },
-        ],
-        author: { _id: "1", name: "John Doe" },
-        upvotes: 10,
-        views: 120,
-        answers: [],
-        createdAt: new Date("2024-02-01T13:58:09.292Z"),
-    },
-];
-export default function Home() {
+export default async function Home() {
+    const result = await getAllQuestions({});
+
     return (
         <>
-            <div
-                className="flex w-full flex-col-reverse justify-between gap-4 
-        sm:flex-row sm:items-center"
-            >
+            <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
                 <h1 className="h1-bold text-dark100_light900">All Questions</h1>
                 <Link
                     href="/ask-question"
@@ -91,10 +26,7 @@ export default function Home() {
                     </Button>
                 </Link>
             </div>
-            <div
-                className="mt-11 flex justify-between gap-5 
-            max-sm:flex-col sm:items-center"
-            >
+            <div className="mt-11 flex justify-between gap-5 max-sm:flex-col sm:items-center">
                 <LocalSearchBar
                     route="/"
                     iconPosition="left"
@@ -111,9 +43,9 @@ export default function Home() {
             <div className="max-md:hidden">
                 <HomeFilters />
             </div>
-            <div className="mt-10 flex w-full flex-col gap-6 ">
-                {questions.length > 0 ? (
-                    questions.map((question) => (
+            <div className="mt-10 flex w-full flex-col gap-6">
+                {result.questions.length > 0 ? (
+                    result.questions.map((question) => (
                         <QuestionCard
                             key={question._id}
                             _id={question._id}
@@ -128,10 +60,8 @@ export default function Home() {
                     ))
                 ) : (
                     <NoResult
-                        title="There`s no Question to show!"
-                        description="Be the first to break the silence! 🚀 Ask a Question and
-                    kickstart the discussion. Your query could be the next big thing
-                    others could learn from. Get Invovled 💡"
+                        title="There's no Question to show!"
+                        description="Be the first to break the silence! 🚀 Ask a Question and kickstart the discussion. Your query could be the next big thing others could learn from. Get Involved 💡"
                         link="/ask-question"
                         linkTitle="Ask A question"
                     />
