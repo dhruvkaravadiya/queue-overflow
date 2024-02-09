@@ -5,6 +5,7 @@ import Question from "../models/question.model";
 import Tag from "../models/tag.model";
 import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
 import { revalidatePath } from "next/cache";
+import User from "../models/user.model";
 
 export async function createQuestion(params: CreateQuestionParams) {
     try {
@@ -45,7 +46,7 @@ export async function getAllQuestions(params: GetQuestionsParams) {
         connectToDatabase();
         const questions = await Question.find({})
             .populate({ path: "tags", model: Tag, select: "name" })
-            .populate({ path: "author", model: "User", select: "name" })
+            .populate({ path: "author", model: User, select: "name" })
             .sort({ createdAt: -1 });
         return { questions };
     } catch (err) {
