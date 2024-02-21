@@ -49,7 +49,11 @@ export default async function Home() {
                             _id: Key | null | undefined;
                             title: string;
                             tags: { _id: string; name: string }[];
-                            author: { _id: string; name: string };
+                            author: {
+                                _id: string;
+                                name: string;
+                                picture: string;
+                            };
                             upvotes: number;
                             views: number;
                             answers: object[];

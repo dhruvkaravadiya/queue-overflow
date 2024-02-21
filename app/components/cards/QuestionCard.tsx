@@ -8,7 +8,11 @@ interface QuestionProps {
     _id: string;
     title: string;
     tags: { _id: string; name: string }[];
-    author: { _id: string; name: string };
+    author: {
+        picture: string;
+        _id: string;
+        name: string;
+    };
     upvotes: number;
     views: number;
     answers: Array<object>;
@@ -47,7 +51,7 @@ const QuestionCard = ({
             </div>
             <div className="flex-between mt-6 w-full flex-wrap gap-3">
                 <Metric
-                    imgUrl="assets/icons/avatar.svg"
+                    imgUrl={author.picture}
                     alt="Author"
                     value={author.name}
                     title={` - asked ${getTimeStamp(createdAt)}`}
