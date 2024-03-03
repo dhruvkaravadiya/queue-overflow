@@ -73,6 +73,7 @@ const RightSideBar = () => {
                             name={tag.name}
                             totalQuestions={tag.totalQuestions}
                             showCount
+                            clickable={true}
                         />
                     ))}
                 </div>

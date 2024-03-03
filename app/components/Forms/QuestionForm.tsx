@@ -19,7 +19,7 @@ import { NEXT_PUBLIC_TINY_MCE_EDITOR_API_KEY } from "../../../config";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
-import { createQuestion } from "@/database/actions/question.action";
+import { createQuestion } from "@/database/actions/question.actions";
 import { useRouter, usePathname } from "next/navigation";
 
 const type: any = "create";

@@ -14,8 +14,17 @@ import Question from "../models/question.model";
 export async function getUserById(clerkId: any) {
     try {
         connectToDatabase();
-
         const user = await User.findOne({ clerkId });
+        return user;
+    } catch (err) {
+        console.log(err);
+    }
+}
+
+export async function getUserByDBObjectId(id: any) {
+    try {
+        connectToDatabase();
+        const user = await User.findById(id);
         return user;
     } catch (err) {
         console.log(err);

@@ -3,13 +3,13 @@ import React from "react";
 import RenderTag from "../shared/RenderTag";
 import Metric from "../shared/Metric";
 import { getFormattedNumber, getTimeStamp } from "@/lib/utils";
+import { getUserByDBObjectId } from "@/database/actions/user.actions";
 
 interface QuestionProps {
     _id: string;
     title: string;
     tags: { _id: string; name: string }[];
     author: {
-        picture: string;
         _id: string;
         name: string;
     };
@@ -19,7 +19,7 @@ interface QuestionProps {
     createdAt: Date;
 }
 
-const QuestionCard = ({
+const QuestionCard = async ({
     _id,
     title,
     tags,
@@ -29,6 +29,7 @@ const QuestionCard = ({
     answers,
     createdAt,
 }: QuestionProps) => {
+    const user = await getUserByDBObjectId(author._id);
     return (
         <div className="card-wrapper rounded-[10px] p-9 sm:px-11">
             <div className="flex flex-col-reverse items-start justify-between gap-5 sm:grow">
@@ -51,7 +52,9 @@ const QuestionCard = ({
             </div>
             <div className="flex-between mt-6 w-full flex-wrap gap-3">
                 <Metric
-                    imgUrl={author.picture}
+                    imgUrl={
+                        user.picture ? user.picture : "assets/icons/user.svg"
+                    }
                     alt="Author"
                     value={author.name}
                     title={` - asked ${getTimeStamp(createdAt)}`}

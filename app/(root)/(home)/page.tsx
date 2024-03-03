@@ -6,12 +6,12 @@ import { HomePageFilters } from "@/constants/filters";
 import HomeFilters from "@/app/components/home/HomeFilters";
 import NoResult from "@/app/components/shared/NoResult";
 import QuestionCard from "@/app/components/cards/QuestionCard";
-import { getAllQuestions } from "@/database/actions/question.action";
-import { Key } from "react";
+import { getAllQuestions } from "@/database/actions/question.actions";
 
 export default async function Home() {
     const result: any = await getAllQuestions({});
-
+    // const user = await getUserById(result.questions[0].author._id);
+    // console.log(user);
     return (
         <>
             <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">
@@ -44,34 +44,19 @@ export default async function Home() {
             </div>
             <div className="mt-10 flex w-full flex-col gap-6">
                 {result.questions.length > 0 ? (
-                    result.questions.map(
-                        (question: {
-                            _id: Key | null | undefined;
-                            title: string;
-                            tags: { _id: string; name: string }[];
-                            author: {
-                                _id: string;
-                                name: string;
-                                picture: string;
-                            };
-                            upvotes: number;
-                            views: number;
-                            answers: object[];
-                            createdAt: Date;
-                        }) => (
-                            <QuestionCard
-                                key={question._id}
-                                _id={question._id as string}
-                                title={question.title}
-                                tags={question.tags}
-                                author={question.author}
-                                upvotes={question.upvotes}
-                                views={question.views}
-                                answers={question.answers}
-                                createdAt={question.createdAt}
-                            />
-                        )
-                    )
+                    result.questions.map((question: any) => (
+                        <QuestionCard
+                            key={question._id}
+                            _id={question._id as string}
+                            title={question.title}
+                            tags={question.tags}
+                            author={question.author}
+                            upvotes={question.upvotes}
+                            views={question.views}
+                            answers={question.answers}
+                            createdAt={question.createdAt}
+                        />
+                    ))
                 ) : (
                     <NoResult
                         title="There's no Question to show!"

@@ -6,7 +6,7 @@ import {
     createUser,
     deleteUser,
     updateUser,
-} from "@/database/actions/user.action";
+} from "@/database/actions/user.actions";
 import { NextResponse } from "next/server";
 
 import { NEXT_PUBLIC_CLERK_WEBHOOK_SIGNING_SECRET } from "@/config";
