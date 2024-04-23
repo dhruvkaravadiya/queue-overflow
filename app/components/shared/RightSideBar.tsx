@@ -2,6 +2,7 @@ import Link from "next/link";
 import React from "react";
 import RenderTag from "./RenderTag";
 import Image from "next/image";
+import { getAllTags } from "@/database/actions/tag.actions";
 const topQuestions = [
     {
         _id: "1",
@@ -24,14 +25,12 @@ const topQuestions = [
         title: "How to install docker on linux using the command line?",
     },
 ];
-const popularTags = [
-    { _id: "1", name: "docker", totalQuestions: 5 },
-    { _id: "2", name: "reactjs", totalQuestions: 3 },
-    { _id: "3", name: "nodejs", totalQuestions: 15 },
-    { _id: "4", name: "expressjs", totalQuestions: 2 },
-    { _id: "5", name: "nextjs", totalQuestions: 8 },
-];
-const RightSideBar = () => {
+
+const RightSideBar = async () => {
+    const result = await getAllTags({});
+    const top5Tags = result?.tags
+        .sort((a, b) => b.questions.length - a.questions.length)
+        .slice(0, 5);
     return (
         <section
             className="background-light900_dark200 light-border
@@ -66,12 +65,12 @@ const RightSideBar = () => {
             <div className="mt-16">
                 <h3 className="h3-bold text-dark200_light900 ">Popular Tags</h3>
                 <div className="mt-7 flex flex-col gap-4">
-                    {popularTags.map((tag) => (
+                    {top5Tags?.map((tag) => (
                         <RenderTag
                             key={tag._id}
                             _id={tag._id}
                             name={tag.name}
-                            totalQuestions={tag.totalQuestions}
+                            totalQuestions={tag.questions.length}
                             showCount
                             clickable={true}
                         />

@@ -1,11 +1,27 @@
 import { Schema } from "mongoose";
 import { IUser } from "@/mongodb";
-export interface CreateAnswerParams {
-    content: string;
-    author: string; // User ID
-    question: string; // Question ID
+interface AnswerId {
+    answerId: string;
+}
+interface Path {
     path: string;
 }
+interface Content {
+    content: string;
+}
+interface QuestionId {
+    questionId: string;
+}
+
+export interface CreateAnswerParams {
+    content: string;
+    author: string;
+    question: string;
+    path: string;
+}
+export interface GetAnswerByIdParams extends AnswerId {}
+export interface EditAnswerParams extends Path, AnswerId, Content {}
+
 export interface GetAnswersParams {
     questionId: string;
     sortBy?: string;

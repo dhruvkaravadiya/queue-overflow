@@ -14,13 +14,14 @@ import {
     FormMessage,
 } from "@/components/ui/form";
 import { Input } from "@/components/ui/input";
-import { QuestionValidationsSchema } from "@/lib/validations";
+import { QuestionValidation } from "@/lib/validations";
 import { NEXT_PUBLIC_TINY_MCE_EDITOR_API_KEY } from "../../../config";
 import { Editor } from "@tinymce/tinymce-react";
 import Image from "next/image";
 import { Badge } from "@/components/ui/badge";
 import { createQuestion } from "@/database/actions/question.actions";
 import { useRouter, usePathname } from "next/navigation";
+import { useTheme } from "@/app/context/ThemeProvider";
 
 const type: any = "create";
 interface Props {
@@ -31,11 +32,13 @@ const QuestionForm = ({ mongoUserId }: Props) => {
     const editorRef = useRef(null);
     const [isSubmitting, setIsSubmitting] = useState(false);
 
+    const { mode } = useTheme();
+
     const router = useRouter();
     const pathname = usePathname();
 
-    const form = useForm<z.infer<typeof QuestionValidationsSchema>>({
-        resolver: zodResolver(QuestionValidationsSchema),
+    const form = useForm<z.infer<typeof QuestionValidation>>({
+        resolver: zodResolver(QuestionValidation),
         defaultValues: {
             title: "",
             explanation: "",
@@ -44,7 +47,7 @@ const QuestionForm = ({ mongoUserId }: Props) => {
     });
 
     // 2. Define a submit handler.
-    async function onSubmit(values: z.infer<typeof QuestionValidationsSchema>) {
+    async function onSubmit(values: z.infer<typeof QuestionValidation>) {
         setIsSubmitting(true);
         try {
             // make async call to api => Create Question
@@ -178,14 +181,14 @@ const QuestionForm = ({ mongoUserId }: Props) => {
                                                 "alignright alignjustify | bullist numlist outdent indent",
                                             content_style:
                                                 "body { font-family:Inter; font-size:16px }",
-                                            //   skin:
-                                            //       mode === "dark"
-                                            //           ? "oxide-dark"
-                                            //           : "oxide",
-                                            //   content_css:
-                                            //       mode === "dark"
-                                            //           ? "dark"
-                                            //           : "light",
+                                            skin:
+                                                mode === "dark"
+                                                    ? "oxide-dark"
+                                                    : "oxide",
+                                            content_css:
+                                                mode === "dark"
+                                                    ? "dark"
+                                                    : "light",
                                         }}
                                     />
                                 </FormControl>

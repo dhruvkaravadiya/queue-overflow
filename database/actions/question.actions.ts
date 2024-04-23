@@ -3,7 +3,11 @@
 import { connectToDatabase } from "@/lib/mongoose";
 import Question from "../models/question.model";
 import Tag from "../models/tag.model";
-import { CreateQuestionParams, GetQuestionsParams } from "./shared.types";
+import {
+    CreateQuestionParams,
+    GetQuestionByIdParams,
+    GetQuestionsParams,
+} from "./shared.types";
 import { revalidatePath } from "next/cache";
 import User from "../models/user.model";
 
@@ -25,7 +29,7 @@ export async function createQuestion(params: CreateQuestionParams) {
                 { name: { $regex: new RegExp(`^${tag}$`, "i") } },
                 {
                     $setOnInsert: { name: tag },
-                    $push: { question: question._id },
+                    $push: { questions: question._id },
                 },
                 { upsert: true, new: true }
             );
@@ -51,5 +55,28 @@ export async function getAllQuestions(params: GetQuestionsParams) {
         return { questions };
     } catch (err) {
         console.log(err);
+    }
+}
+
+export async function getQuestionById(params: GetQuestionByIdParams) {
+    try {
+        connectToDatabase();
+        const { questionId } = params;
+        const question = await Question.findById(questionId)
+            .populate({
+                path: "tags",
+                model: Tag,
+                select: "_id name",
+            })
+            .populate({
+                path: "author",
+                model: "User",
+                select: "_id clerkId name picture",
+            });
+
+        return question;
+    } catch (err) {
+        console.log(err);
+        throw err;
     }
 }
