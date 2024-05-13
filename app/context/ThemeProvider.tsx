@@ -10,25 +10,14 @@ interface ThemeContextType {
 const ThemeContext = createContext<ThemeContextType | undefined>(undefined);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-    // Lazy Initialization :
-    // Get the theme from local storage or the user's system preferences
-    // by passing a function to useState instead of a value to be set initially
-    const [mode, setMode] = useState<string>(() => {
-        const storedMode = localStorage.theme?.toString() ?? "";
+    const [mode, setMode] = useState<string>("");
+
+    const handleThemeChange = () => {
         if (
-            storedMode === "dark" ||
-            (!storedMode.length &&
+            localStorage.theme === "dark" ||
+            (!("theme" in localStorage) &&
                 window.matchMedia("(prefers-color-scheme: dark)").matches)
         ) {
-            return "dark";
-        } else {
-            return "light";
-        }
-    });
-
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-    const handleThemeChange = () => {
-        if (mode === "dark") {
             setMode("dark");
             document.documentElement.classList.add("dark");
         } else {
@@ -37,10 +26,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
         }
     };
 
-    useEffect(() => {
-        const timeoutId = setTimeout(handleThemeChange, 300);
-        return () => clearTimeout(timeoutId);
-    }, [handleThemeChange]);
+    useEffect(() => handleThemeChange(), [mode]);
 
     return (
         <ThemeContext.Provider value={{ mode, setMode }}>
@@ -49,8 +35,6 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
     );
 }
 
-// Custom hook to consume the theme context
-// in all functional components throughout the app
 export function useTheme() {
     const context = useContext(ThemeContext);
 
