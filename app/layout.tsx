@@ -10,7 +10,7 @@ import { ThemeProvider } from "./context/ThemeProvider";
 
 export const metadata: Metadata = {
     title: "Queue Overflow",
-    description: "Thriving Community of Geeks",
+    description: "Thriving Community of Developers and Geeks",
     icons: {
         icon: "/assets/icons/site-logo.svg",
     },
