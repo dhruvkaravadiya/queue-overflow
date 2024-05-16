@@ -11,7 +11,7 @@ import {
 import { revalidatePath } from "next/cache";
 import Question from "../models/question.model";
 
-export async function getUserById(clerkId: any) {
+export async function getUserByClerkId(clerkId: any) {
     try {
         connectToDatabase();
         const user = await User.findOne({ clerkId });
