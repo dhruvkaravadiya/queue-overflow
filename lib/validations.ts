@@ -6,7 +6,7 @@ export const QuestionValidation = z.object({
     tags: z.array(z.string().min(1).max(20)).min(1).max(3),
 });
 
-export const AnswerValidation = z.object({
+export const AnswerValidationSchema = z.object({
     answer: z.string().min(10),
 });
 
