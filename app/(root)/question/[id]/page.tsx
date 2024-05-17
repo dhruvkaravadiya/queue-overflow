@@ -1,9 +1,12 @@
 import AnswerForm from "@/app/components/Forms/AnswerForm";
+import AllAnswers from "@/app/components/shared/AllAnswers";
 import Metric from "@/app/components/shared/Metric";
 import ParseHTML from "@/app/components/shared/ParseHTML";
 import RenderTag from "@/app/components/shared/RenderTag";
 import { getQuestionById } from "@/database/actions/question.actions";
+import { getUserByClerkId } from "@/database/actions/user.actions";
 import { getFormattedNumber, getTimeStamp } from "@/lib/utils";
+import { auth } from "@clerk/nextjs";
 import Image from "next/image";
 import Link from "next/link";
 import React from "react";
@@ -16,7 +19,15 @@ const Page = async ({
     searchParams: any;
 }) => {
     const result = await getQuestionById({ questionId: params.id });
-    console.log(searchParams);
+    console.log("Search Params" + searchParams);
+    const { userId: clerkId } = auth();
+    let mongodbUser;
+    console.log("clerk id" + clerkId);
+    if (clerkId) {
+        mongodbUser = await getUserByClerkId(clerkId);
+        console.log(mongodbUser);
+    }
+
     return (
         <>
             <div className="flex-start w-full flex-col">
@@ -80,7 +91,17 @@ const Page = async ({
                     ></RenderTag>
                 ))}
             </div>
-            <AnswerForm />
+            <AllAnswers
+                questionId={result._id.toString()}
+                userId={mongodbUser._id.toString()}
+                totalAnswers={result.answers.length}
+            />
+
+            <AnswerForm
+                question={result.content}
+                questionId={result._id.toString()}
+                authorId={mongodbUser._id.toString()}
+            />
         </>
     );
 };
