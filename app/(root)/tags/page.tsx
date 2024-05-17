@@ -8,7 +8,7 @@ import { getAllTags } from "@/database/actions/tag.actions";
 import Link from "next/link";
 const Page = async () => {
     const result = await getAllTags({});
-    console.log(result?.tags.length);
+
     return (
         <>
             <h1 className="h1-bold text-dark100_light900">All Tags</h1>

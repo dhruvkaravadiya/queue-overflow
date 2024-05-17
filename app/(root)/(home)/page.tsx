@@ -10,8 +10,7 @@ import { getAllQuestions } from "@/database/actions/question.actions";
 
 export default async function Home() {
     const result: any = await getAllQuestions({});
-    // const user = await getUserById(result.questions[0].author._id);
-    // console.log(user);
+
     return (
         <>
             <div className="flex w-full flex-col-reverse justify-between gap-4 sm:flex-row sm:items-center">

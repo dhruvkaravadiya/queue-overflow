@@ -8,7 +8,7 @@ import {
     FormItem,
     FormMessage,
 } from "@/components/ui/form";
-import { AnswerValidation } from "@/lib/validations";
+import { AnswerValidationSchema } from "@/lib/validations";
 import { z } from "zod";
 import { zodResolver } from "@hookform/resolvers/zod";
 import { Editor } from "@tinymce/tinymce-react";
@@ -16,18 +16,53 @@ import { NEXT_PUBLIC_TINY_MCE_EDITOR_API_KEY } from "@/config";
 import { useTheme } from "@/app/context/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-const AnswerForm = () => {
+import { createAnswer } from "@/database/actions/answer.action";
+
+interface Props {
+    question: string;
+    questionId: string;
+    authorId: string;
+}
+
+const AnswerForm = ({ question, questionId, authorId }: Props) => {
     const [isSubmitting, setIsSubmitting] = useState(false);
 
     const { mode } = useTheme();
     const editorRef = useRef(null);
-    const form = useForm<z.infer<typeof AnswerValidation>>({
-        resolver: zodResolver(AnswerValidation),
+    const form = useForm<z.infer<typeof AnswerValidationSchema>>({
+        resolver: zodResolver(AnswerValidationSchema),
         defaultValues: {
             answer: "",
         },
     });
-    const handleCreateAnswer = (data) => {};
+    const handleCreateAnswer = async (
+        data: z.infer<typeof AnswerValidationSchema>
+    ) => {
+        setIsSubmitting(true);
+        console.log("Front End create method called");
+        console.log("Question ID", questionId);
+        console.log("Author ID", authorId);
+        console.log("Answer", data.answer);
+        try {
+            await createAnswer({
+                content: data.answer,
+                author: authorId,
+                question: questionId,
+                path: `/question/${questionId}`,
+            });
+
+            form.reset();
+
+            // handle editor ref for editor's content
+            if (editorRef.current) {
+                const editor = editorRef.current as any;
+                editor.setContent("");
+            }
+        } catch (error) {
+            console.log(error);
+        }
+        setIsSubmitting(false);
+    };
     return (
         <div>
             <div className="mt-4 flex flex-col items-center justify-between gap-5 sm:flex-row sm:items-center sm:gap-2">
@@ -64,7 +99,7 @@ const AnswerForm = () => {
                                         apiKey={
                                             NEXT_PUBLIC_TINY_MCE_EDITOR_API_KEY
                                         }
-                                        onInit={(evt, editor) => {
+                                        onInit={(_evt, editor) => {
                                             // @ts-ignore
                                             // eslint-disable-next-line no-undef
                                             editorRef.current = editor;
@@ -119,7 +154,7 @@ const AnswerForm = () => {
                     />
                     <div className="flex justify-end">
                         <Button
-                            type="button"
+                            type="submit"
                             className="primary-gradient w-fit text-white"
                             disabled={isSubmitting}
                         >

@@ -22,7 +22,7 @@ import type {
 export async function createAnswer(params: CreateAnswerParams) {
     try {
         connectToDatabase();
-
+        console.log("Create Answer Method Called");
         const { content, author, question, path } = params;
 
         const newAnswer = await Answer.create({
@@ -31,22 +31,23 @@ export async function createAnswer(params: CreateAnswerParams) {
             question,
             path,
         });
-
+        console.log(newAnswer);
         // add the answer to the question's answers array
-        const questionObj = await Question.findByIdAndUpdate(question, {
+        // const questionObj =
+        await Question.findByIdAndUpdate(question, {
             $push: { answers: newAnswer._id },
         });
 
         // create an interaction record for the user's create_answer action
-        await Interaction.create({
-            user: author,
-            action: "answer",
-            question,
-            answer: newAnswer._id,
-            tags: questionObj.tag,
-        });
+        // await Interaction.create({
+        //     user: author,
+        //     action: "answer",
+        //     question,
+        //     answer: newAnswer._id,
+        //     tags: questionObj.tag,
+        // });
 
-        // increment author's reputation by +S for creating a answer
+        // increment author's reputation by +5 for creating a answer
         // await User.findByIdAndUpdate(author, { $inc: { reputation: 10 } });
 
         revalidatePath(path);
